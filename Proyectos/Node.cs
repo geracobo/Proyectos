@@ -27,6 +27,7 @@ namespace Proyectos
 
         public Node()
         {
+            this._activityName = "";
             this.DependsOn = new List<Node>();
 
             this.Radius = 50;
@@ -158,6 +159,23 @@ namespace Proyectos
         {
             get;
             set;
+        }
+
+        public string DependsOnString
+        {
+            get
+            {
+                string ret = "";
+                foreach (Node dep in this.DependsOn)
+                {
+                    ret += ",";
+                    ret += dep.ActivityName;
+                }
+                if (ret.Length > 0)
+                    ret = ret.Remove(0, 1);
+
+                return ret;
+            }
         }
 
 
