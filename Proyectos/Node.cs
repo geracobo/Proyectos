@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
@@ -15,14 +14,14 @@ namespace Proyectos
         private Point _mouseClicked;
 
         private string _activityName;
-        private int _activityTime;
-        private int _activityFirstTimeStart;
-        private int _activityFirstTimeEnd;
-        private int _activityLastTimeStart;
-        private int _activityLastTimeEnd;
+        private decimal _activityTime;
+        private decimal _activityFirstTimeStart;
+        private decimal _activityFirstTimeEnd;
+        private decimal _activityLastTimeStart;
+        private decimal _activityLastTimeEnd;
 
-        private int _activityFreeSlack;
-        private int _activityTotalSlack;
+        private decimal _activityFreeSlack;
+        private decimal _activityTotalSlack;
 
         private List<Node> _dependsOn;
 
@@ -64,7 +63,7 @@ namespace Proyectos
                 this._activityName = value;
             }
         }
-        public int ActivityTime
+        public decimal ActivityTime
         {
             get
             {
@@ -75,7 +74,7 @@ namespace Proyectos
                 this._activityTime = value;
             }
         }
-        public int ActivityFirstTimeStart
+        public decimal ActivityFirstTimeStart
         {
             get
             {
@@ -86,7 +85,7 @@ namespace Proyectos
                 this._activityFirstTimeStart = value;
             }
         }
-        public int ActivityFirstTimeEnd
+        public decimal ActivityFirstTimeEnd
         {
             get
             {
@@ -97,7 +96,7 @@ namespace Proyectos
                 this._activityFirstTimeEnd = value;
             }
         }
-        public int ActivityLastTimeStart
+        public decimal ActivityLastTimeStart
         {
             get
             {
@@ -108,7 +107,7 @@ namespace Proyectos
                 this._activityLastTimeStart = value;
             }
         }
-        public int ActivityLastTimeEnd
+        public decimal ActivityLastTimeEnd
         {
             get
             {
@@ -120,7 +119,7 @@ namespace Proyectos
             }
         }
 
-        public int ActivityFreeSlack
+        public decimal ActivityFreeSlack
         {
             get
             {
@@ -131,7 +130,7 @@ namespace Proyectos
                 this._activityFreeSlack = value;
             }
         }
-        public int ActivityTotalSlack
+        public decimal ActivityTotalSlack
         {
             get
             {
@@ -219,11 +218,18 @@ namespace Proyectos
 
             // Draw slacks
             Font f = new Font(font.Name, 8, FontStyle.Italic);
-            strs = gfx.MeasureString("HA:"+this.ActivityTotalSlack.ToString(), f);
-            gfx.DrawString("HA:"+this.ActivityTotalSlack.ToString(), f, blackBrush, (float)topleft.X-strs.Width, (float)topleft.Y);
-            int h1 = (int)strs.Height;
-            strs = gfx.MeasureString("HL:"+this.ActivityFreeSlack.ToString(), f);
-            gfx.DrawString("HL:" + this.ActivityFreeSlack.ToString(), f, blackBrush, (float)topleft.X - strs.Width, (float)topleft.Y + h1);
+            Brush blueBrush = new SolidBrush(Color.Blue);
+            Brush whiteBrush = new SolidBrush(Color.White);
+            SizeF strs1 = gfx.MeasureString("HA:"+this.ActivityTotalSlack.ToString(), f);
+            SizeF strs2 = gfx.MeasureString("HL:" + this.ActivityFreeSlack.ToString(), f);
+
+            int margin = 2;
+
+            gfx.FillRectangle(whiteBrush, (float)topleft.X - strs1.Width - margin, (float)topleft.Y - margin, strs1.Width + (margin * 2), strs1.Height + strs2.Height + (margin * 2));
+            gfx.DrawRectangle(blackPen, (float)topleft.X - strs1.Width - margin, (float)topleft.Y - margin, strs1.Width + (margin * 2), strs1.Height + strs2.Height + (margin * 2));
+
+            gfx.DrawString("HA:" + this.ActivityTotalSlack.ToString(), f, blueBrush, (float)topleft.X - strs1.Width, (float)topleft.Y);
+            gfx.DrawString("HL:" + this.ActivityFreeSlack.ToString(), f, blueBrush, (float)topleft.X - strs1.Width, (float)topleft.Y + strs1.Height);
 
         }
 
@@ -268,9 +274,12 @@ namespace Proyectos
             if (res != System.Windows.Forms.DialogResult.OK)
                 return;
 
-            nodes_search = from n in nodes
-                           where (n.ActivityName == config.ActivityName.Trim()) && n.ActivityName != this.ActivityName
-                           select n;
+            //nodes_search = from n in nodes
+            //               where (n.ActivityName == config.ActivityName.Trim()) && n.ActivityName != this.ActivityName
+            //               select n;
+
+            nodes_search = nodes.Where(n => n.ActivityName == config.ActivityName.Trim() && n.ActivityName != this.ActivityName);
+
             if (nodes_search.Count() > 0)
             {
                 MessageBox.Show("Nombre repetido.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);

@@ -5,7 +5,6 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Proyectos
@@ -16,7 +15,7 @@ namespace Proyectos
         {
             InitializeComponent();
             this.NameBox.Text = node.ActivityName ?? "";
-            this.TimeBox.Value = node.ActivityTime;
+            this.TimeBox.Text = node.ActivityTime.ToString();
             this.RadiusBox.Value = node.Radius;
 
             this.DependsOnBox.Text = "";
@@ -35,7 +34,7 @@ namespace Proyectos
             get;
             set;
         }
-        public int ActivityTime
+        public decimal ActivityTime
         {
             get;
             set;
@@ -53,8 +52,16 @@ namespace Proyectos
 
         private void OkButton_Click(object sender, EventArgs e)
         {
+            decimal time = 0;
+
+            if (!decimal.TryParse(this.TimeBox.Text, out time))
+            {
+                MessageBox.Show("La duracion de la actividad no es numerica.");
+                return;
+            }
+
             this.ActivityName = this.NameBox.Text;
-            this.ActivityTime = (int)this.TimeBox.Value;
+            this.ActivityTime = time;
             this.DependsOnString = this.DependsOnBox.Text;
             this.Radius = (int)this.RadiusBox.Value;
 
@@ -75,7 +82,7 @@ namespace Proyectos
 
         private void TimeBox_Enter(object sender, EventArgs e)
         {
-            this.TimeBox.Select(0, this.TimeBox.Value.ToString().Length);
+            this.TimeBox.Select(0, this.TimeBox.Text.Length);
         }
 
         private void DependsOnBox_Enter(object sender, EventArgs e)

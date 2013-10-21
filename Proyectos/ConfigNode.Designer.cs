@@ -33,12 +33,11 @@
             this.label1 = new System.Windows.Forms.Label();
             this.NameBox = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.TimeBox = new System.Windows.Forms.NumericUpDown();
             this.dependeLabel = new System.Windows.Forms.Label();
             this.DependsOnBox = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.RadiusBox = new System.Windows.Forms.NumericUpDown();
-            ((System.ComponentModel.ISupportInitialize)(this.TimeBox)).BeginInit();
+            this.TimeBox = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.RadiusBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -92,14 +91,6 @@
             this.label2.TabIndex = 11;
             this.label2.Text = "Duración:";
             // 
-            // TimeBox
-            // 
-            this.TimeBox.Location = new System.Drawing.Point(97, 32);
-            this.TimeBox.Name = "TimeBox";
-            this.TimeBox.Size = new System.Drawing.Size(57, 20);
-            this.TimeBox.TabIndex = 1;
-            this.TimeBox.Enter += new System.EventHandler(this.TimeBox_Enter);
-            // 
             // dependeLabel
             // 
             this.dependeLabel.AutoSize = true;
@@ -134,17 +125,25 @@
             this.RadiusBox.Size = new System.Drawing.Size(57, 20);
             this.RadiusBox.TabIndex = 14;
             // 
+            // TimeBox
+            // 
+            this.TimeBox.Location = new System.Drawing.Point(97, 32);
+            this.TimeBox.Name = "TimeBox";
+            this.TimeBox.Size = new System.Drawing.Size(57, 20);
+            this.TimeBox.TabIndex = 1;
+            this.TimeBox.Enter += new System.EventHandler(this.TimeBox_Enter);
+            // 
             // ConfigNode
             // 
             this.AcceptButton = this.OkButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(285, 132);
+            this.Controls.Add(this.TimeBox);
             this.Controls.Add(this.RadiusBox);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.DependsOnBox);
             this.Controls.Add(this.dependeLabel);
-            this.Controls.Add(this.TimeBox);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.NameBox);
             this.Controls.Add(this.label1);
@@ -153,7 +152,6 @@
             this.Name = "ConfigNode";
             this.Text = "Configurar Actividad";
             this.Load += new System.EventHandler(this.ConfigNode_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.TimeBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.RadiusBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -167,10 +165,10 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox NameBox;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.NumericUpDown TimeBox;
         private System.Windows.Forms.Label dependeLabel;
         private System.Windows.Forms.TextBox DependsOnBox;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.NumericUpDown RadiusBox;
+        private System.Windows.Forms.TextBox TimeBox;
     }
 }

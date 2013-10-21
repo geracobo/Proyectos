@@ -6,7 +6,6 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Proyectos
@@ -79,7 +78,7 @@ namespace Proyectos
 
         public void PaintCanvas(Graphics gfx)
         {
-            gfx.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
+            //gfx.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
             gfx.Clear(this.BackColor);
 
             Pen arrowPen = new Pen(Color.Black, 2);
@@ -123,6 +122,17 @@ namespace Proyectos
             IEnumerable<Node> node_search;
             Node ini;
             Node fin;
+
+            foreach (Node n in this.Nodes)
+            {
+                n.ActivityFirstTimeEnd = 0;
+                n.ActivityFirstTimeStart = 0;
+                n.ActivityFreeSlack = 0;
+                n.ActivityLastTimeEnd = 0;
+                n.ActivityLastTimeStart = 0;
+                n.ActivityTotalSlack = 0;
+                n.Critic = false;
+            }
 
             node_search = from n in this.Nodes
                           where n.ActivityName == "INI"
@@ -180,7 +190,7 @@ namespace Proyectos
                 if (node_search.Count() < 1)
                     return;
 
-                int min = node_search.ElementAt(0).ActivityFirstTimeStart;
+                decimal min = node_search.ElementAt(0).ActivityFirstTimeStart;
                 foreach (Node n in node_search)
                 {
                     if (n.ActivityFirstTimeStart < min)

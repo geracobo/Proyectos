@@ -49,6 +49,9 @@ namespace Proyectos
             this.MainCanvas.PaintCanvas(gfx);
 
             SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "Bitmap (*.bmp)|*.bmp|All files (*.*)|*.*";
+            sfd.DefaultExt = "bmp";
+            sfd.AddExtension = true;
             DialogResult res = sfd.ShowDialog();
             if (res != System.Windows.Forms.DialogResult.OK)
                 return;
