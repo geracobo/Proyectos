@@ -302,6 +302,23 @@ namespace Proyectos
             foreach (Node node in this.Nodes)
             {
                 node.OnMouseMove(e.Location);
+
+                if (node.HitTest(e.Location))
+                {
+                    if (!node.MouseOver)
+                    {
+                        node.OnMouseEnter();
+                    }
+                    node.MouseOver = true;
+                }
+                else
+                {
+                    if (node.MouseOver)
+                    {
+                        node.OnMouseLeave();
+                    }
+                    node.MouseOver = false;
+                }
             }
             this.Invalidate();
         }

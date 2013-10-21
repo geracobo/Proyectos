@@ -35,6 +35,8 @@ namespace Proyectos
 
             this._dragging = false;
             this._mouseClicked = new Point();
+
+            this.MouseOver = false;
         }
 
 
@@ -179,6 +181,13 @@ namespace Proyectos
         }
 
 
+        public bool MouseOver
+        {
+            get;
+            set;
+        }
+
+
         public void Paint(Graphics gfx)
         {
             int width = this.Radius * 2;
@@ -265,6 +274,13 @@ namespace Proyectos
             path.AddEllipse(topleft.X, topleft.Y, width, height);
             Region reg = new Region(path);
             return reg.IsVisible(point);
+        }
+
+        public void OnMouseEnter()
+        {
+        }
+        public void OnMouseLeave()
+        {
         }
 
         public void OnMouseDown(Point location)
