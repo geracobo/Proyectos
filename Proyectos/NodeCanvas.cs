@@ -1,0 +1,318 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace Proyectos
+{
+    public partial class NodeCanvas : Control
+    {
+        private List<Node> _nodes;
+
+        private int analizeDepth;
+
+        private const int MaxDepth = 100;
+
+
+        public event StatusEventHandler Status;
+
+        public NodeCanvas()
+        {
+            InitializeComponent();
+
+
+            this._nodes = new List<Node>();
+
+            this.BackColor = Color.White;
+
+            this.DoubleBuffered = true;
+            this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+            this.SetStyle(ControlStyles.UserPaint, true);
+            this.SetStyle(ControlStyles.ResizeRedraw, true);
+            this.SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
+        }
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public override Color BackColor
+        {
+            get
+            {
+                return base.BackColor;
+            }
+            set
+            {
+                base.BackColor = value;
+            }
+        }
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public List<Node> Nodes
+        {
+            get
+            {
+                return this._nodes;
+            }
+            set
+            {
+                this._nodes = value;
+                this.Refresh();
+            }
+        }
+
+
+
+        protected override void OnPaint(PaintEventArgs pe)
+        {
+            if (this.DesignMode)
+                return;
+
+            this.PaintCanvas(pe.Graphics);
+
+            //this.Invalidate();
+        }
+
+        public void PaintCanvas(Graphics gfx)
+        {
+            gfx.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
+            gfx.Clear(this.BackColor);
+
+            Pen arrowPen = new Pen(Color.Black, 2);
+            arrowPen.CustomEndCap = new System.Drawing.Drawing2D.AdjustableArrowCap(5, 5);
+
+            Point orig = new Point();
+            Point dest = new Point();
+
+            foreach (Node node in this.Nodes)
+            {
+                node.Paint(gfx);
+                foreach (Node dependency in node.DependsOn)
+                {
+                    orig = dependency.Origin;
+                    dest = node.Origin;
+
+                    if (node.Critic && dependency.Critic)
+                        arrowPen.Color = Color.Red;
+                    else
+                        arrowPen.Color = Color.Black;
+
+                    double r = node.Radius;
+
+                    double a = orig.Y - dest.Y;
+                    double b = orig.X - dest.X;
+                    double theta = Math.Atan2(a, b);
+
+                    double offx = Math.Cos(theta) * r;
+                    double offy = Math.Sin(theta) * r;
+
+                    orig.Offset((int)-offx, (int)-offy);
+                    dest.Offset((int)offx, (int)offy);
+
+                    gfx.DrawLine(arrowPen, orig, dest);
+                }
+            }
+        }
+
+        public void CalculateGraph()
+        {
+            IEnumerable<Node> node_search;
+            Node ini;
+            Node fin;
+
+            node_search = from n in this.Nodes
+                          where n.ActivityName == "INI"
+                          select n;
+            if (node_search.Count() < 1)
+            {
+                this.Status("El nodo de inicio no esta definido.");
+                return;
+            }
+            ini = node_search.First();
+
+            node_search = from n in this.Nodes
+                          where n.ActivityName == "FIN"
+                          select n;
+            if (node_search.Count() < 1)
+            {
+                this.Status("El nodo final no esta definido.");
+                return;
+            }
+            fin = node_search.First();
+
+            // Forward...
+            this.analizeDepth = 0;
+            AnalizeForward(ini);
+
+            if (this.analizeDepth > MaxDepth)
+                return;
+
+            // Backwards
+            this.analizeDepth = 0;
+            this.Nodes.ForEach(delegate(Node node)
+            {
+                node.ActivityLastTimeEnd = fin.ActivityFirstTimeEnd;
+                node.ActivityLastTimeStart = fin.ActivityFirstTimeStart;
+            });
+            AnalizeBackward(fin);
+
+            // Slacks
+            AnalizeSlacks();
+
+            this.Invalidate();
+        }
+
+        private void AnalizeSlacks()
+        {
+            this.Nodes.ForEach(delegate(Node node)
+            {
+                IEnumerable<Node> node_search;
+
+                node_search = from n in this.Nodes
+                              where n.DependsOn.Contains(node)
+                              select n;
+
+                // No succesors
+                if (node_search.Count() < 1)
+                    return;
+
+                int min = node_search.ElementAt(0).ActivityFirstTimeStart;
+                foreach (Node n in node_search)
+                {
+                    if (n.ActivityFirstTimeStart < min)
+                        min = n.ActivityFirstTimeStart;
+                }
+                node.ActivityFreeSlack = min - node.ActivityFirstTimeEnd;
+            });
+        }
+
+        private void AnalizeForward(Node node)
+        {
+            this.analizeDepth++;
+            if (this.analizeDepth > MaxDepth)
+            {
+                this.Status("Error ciclico.");
+                return;
+            }
+
+            IEnumerable<Node> node_search;
+
+            node_search = from n in this.Nodes
+                          where n.DependsOn.Contains(node)
+                          select n;
+
+            // No succesors
+            if (node_search.Count() < 1)
+                return;
+
+            node.ActivityFreeSlack = 999999999;
+
+            foreach (Node succesor in node_search)
+            {
+                // Check if we are not trying to overwrite a node.
+                if (succesor.ActivityFirstTimeStart > node.ActivityFirstTimeEnd)
+                {
+                    // We are, we should stop going forward here since there is really no point.
+                    continue;
+                }
+
+                succesor.ActivityFirstTimeStart = node.ActivityFirstTimeEnd;
+                succesor.ActivityFirstTimeEnd = succesor.ActivityFirstTimeStart + succesor.ActivityTime;
+
+                if ((succesor.ActivityFirstTimeStart - node.ActivityFirstTimeEnd) < node.ActivityFreeSlack)
+                {
+                    node.ActivityFreeSlack = succesor.ActivityFirstTimeStart - node.ActivityFirstTimeEnd;
+                }
+
+                AnalizeForward(succesor);
+            }
+        }
+        private void AnalizeBackward(Node node)
+        {
+            this.analizeDepth++;
+            if (this.analizeDepth > MaxDepth)
+            {
+                this.Status("Error ciclico.");
+                return;
+            }
+
+            foreach (Node dependency in node.DependsOn)
+            {
+                if (dependency.ActivityLastTimeEnd < node.ActivityLastTimeStart)
+                    continue;
+
+                dependency.ActivityLastTimeEnd = node.ActivityLastTimeStart;
+                dependency.ActivityLastTimeStart = dependency.ActivityLastTimeEnd - dependency.ActivityTime;
+                AnalizeBackward(dependency);
+            }
+
+            node.ActivityTotalSlack = node.ActivityLastTimeStart - node.ActivityFirstTimeStart;
+            if (node.ActivityTotalSlack == 0)
+                node.Critic = true;
+            else
+                node.Critic = false;
+        }
+
+        private void NodeCanvas_Click(object sender, EventArgs e)
+        {
+            this.Invalidate();
+        }
+
+        private void NodeCanvas_MouseDown(object sender, MouseEventArgs e)
+        {
+            this.Invalidate();
+
+            foreach (Node node in this.Nodes.Reverse<Node>())
+            {
+                if (node.HitTest(e.Location))
+                {
+                    node.OnMouseDown(e.Location);
+                    return;
+                }
+            }
+
+            this.Invalidate();
+        }
+
+        private void NodeCanvas_MouseUp(object sender, MouseEventArgs e)
+        {
+            foreach (Node node in this.Nodes)
+            {
+                node.OnMouseUp(e.Location);
+            }
+            this.Invalidate();
+        }
+
+        private void NodeCanvas_MouseMove(object sender, MouseEventArgs e)
+        {
+            foreach (Node node in this.Nodes)
+            {
+                node.OnMouseMove(e.Location);
+            }
+            this.Invalidate();
+        }
+
+        private void NodeCanvas_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            this.Invalidate();
+            foreach (Node node in this.Nodes)
+            {
+                if (node.HitTest(e.Location))
+                {
+                    node.OnDoubleClick(this.Nodes);
+                }
+            }
+            this.Invalidate();
+        }
+    }
+
+
+
+
+    public delegate void StatusEventHandler(string status);
+
+}
