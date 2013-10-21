@@ -68,9 +68,9 @@
             this.AddActivityButton,
             this.ExportButton,
             this.CalculateButton});
-            this.MainToolbar.Location = new System.Drawing.Point(0, 24);
+            this.MainToolbar.Location = new System.Drawing.Point(3, 3);
             this.MainToolbar.Name = "MainToolbar";
-            this.MainToolbar.Size = new System.Drawing.Size(711, 25);
+            this.MainToolbar.Size = new System.Drawing.Size(697, 25);
             this.MainToolbar.TabIndex = 0;
             this.MainToolbar.Text = "toolStrip1";
             // 
@@ -125,19 +125,20 @@
             this.Tabs.Controls.Add(this.TablaTab);
             this.Tabs.Controls.Add(this.RecursosTab);
             this.Tabs.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Tabs.Location = new System.Drawing.Point(0, 49);
+            this.Tabs.Location = new System.Drawing.Point(0, 24);
             this.Tabs.Name = "Tabs";
             this.Tabs.SelectedIndex = 0;
-            this.Tabs.Size = new System.Drawing.Size(711, 409);
+            this.Tabs.Size = new System.Drawing.Size(711, 434);
             this.Tabs.TabIndex = 3;
             // 
             // GraficaTab
             // 
             this.GraficaTab.Controls.Add(this.MainCanvas);
+            this.GraficaTab.Controls.Add(this.MainToolbar);
             this.GraficaTab.Location = new System.Drawing.Point(4, 22);
             this.GraficaTab.Name = "GraficaTab";
             this.GraficaTab.Padding = new System.Windows.Forms.Padding(3);
-            this.GraficaTab.Size = new System.Drawing.Size(703, 383);
+            this.GraficaTab.Size = new System.Drawing.Size(703, 408);
             this.GraficaTab.TabIndex = 0;
             this.GraficaTab.Text = "Gráfica";
             this.GraficaTab.UseVisualStyleBackColor = true;
@@ -145,7 +146,7 @@
             // MainCanvas
             // 
             this.MainCanvas.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.MainCanvas.Location = new System.Drawing.Point(3, 3);
+            this.MainCanvas.Location = new System.Drawing.Point(3, 28);
             this.MainCanvas.Name = "MainCanvas";
             this.MainCanvas.Size = new System.Drawing.Size(697, 377);
             this.MainCanvas.TabIndex = 1;
@@ -269,7 +270,6 @@
             this.ClientSize = new System.Drawing.Size(711, 480);
             this.Controls.Add(this.Tabs);
             this.Controls.Add(this.MainStatus);
-            this.Controls.Add(this.MainToolbar);
             this.Controls.Add(this.MainMenu);
             this.MainMenuStrip = this.MainMenu;
             this.Name = "MainForm";
@@ -281,6 +281,7 @@
             this.MainStatus.PerformLayout();
             this.Tabs.ResumeLayout(false);
             this.GraficaTab.ResumeLayout(false);
+            this.GraficaTab.PerformLayout();
             this.TablaTab.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.MainMenu.ResumeLayout(false);
