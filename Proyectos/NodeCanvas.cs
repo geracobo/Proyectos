@@ -22,7 +22,12 @@ namespace Proyectos
 
 
         public event StatusEventHandler Status;
-        public event EventHandler NodesChanged;
+
+        public event EventHandler OnInsert;
+        public event EventHandler OnRemove;
+        public event EventHandler OnSet;
+        public event EventHandler OnModify;
+        public event EventHandler OnClear;
 
         public NodeCanvas()
         {
@@ -33,22 +38,30 @@ namespace Proyectos
             this._nodes.OnInsert += delegate(object sender, EventArgs e)
             {
                 this.Status("Actividad Agregada.");
-                this.NodesChanged(this, new EventArgs());
+
+                if (OnInsert != null)
+                    OnInsert(this, new EventArgs());
             };
             this._nodes.OnRemove += delegate(object sender, EventArgs e)
             {
                 this.Status("Actividad Eliminada.");
-                this.NodesChanged(this, new EventArgs());
+
+                if (OnRemove != null)
+                    OnRemove(this, new EventArgs());
             };
             this._nodes.OnSet += delegate(object sender, EventArgs e)
             {
                 this.Status("Actividad Modificada.");
-                this.NodesChanged(this, new EventArgs());
+
+                if (OnSet != null)
+                    OnSet(this, new EventArgs());
             };
             this._nodes.OnClear += delegate(object sender, EventArgs e)
             {
                 this.Status("Actividades Eliminadas.");
-                this.NodesChanged(this, new EventArgs());
+
+                if (OnClear != null)
+                    OnClear(this, new EventArgs());
             };
 
 
@@ -58,7 +71,7 @@ namespace Proyectos
                     return;
 
                 this._selectedNode.OnDoubleClick(this.Nodes);
-                this.NodesChanged(this, new EventArgs());
+                this.OnModify(this, new EventArgs());
             };
             this.EliminarButton.Click += delegate(object sender, EventArgs e)
             {
@@ -66,6 +79,7 @@ namespace Proyectos
                     return;
 
                 this.Nodes.Remove(this._selectedNode);
+                this.OnRemove(this, new EventArgs());
             };
 
 
@@ -382,7 +396,7 @@ namespace Proyectos
                 if (node.HitTest(e.Location))
                 {
                     node.OnDoubleClick(this.Nodes);
-                    this.NodesChanged(this, new EventArgs());
+                    this.OnModify(this, new EventArgs());
                 }
             }
             this.Invalidate();

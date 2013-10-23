@@ -25,29 +25,38 @@ namespace Proyectos
                 this.Status(status);
             };
 
-            this.MainCanvas.NodesChanged += delegate(object sender, EventArgs e)
+            this.MainCanvas.OnRemove += delegate(object sender, EventArgs e)
             {
-                NodesTable.Rows.Clear();
-                foreach (Node node in this.MainCanvas.Nodes)
-                {
-                    DataGridViewRow row = new DataGridViewRow();
-
-                    DataGridViewTextBoxCell act = new DataGridViewTextBoxCell();
-                    act.Value = node.ActivityName;
-
-                    DataGridViewTextBoxCell dur = new DataGridViewTextBoxCell();
-                    dur.Value = node.ActivityTime;
-
-                    DataGridViewTextBoxCell dep = new DataGridViewTextBoxCell();
-                    dep.Value = node.DependsOnString;
-
-                    row.Cells.Add(act);
-                    row.Cells.Add(dur);
-                    row.Cells.Add(dep);
-
-                    this.NodesTable.Rows.Add(row);
-                }
+                UpdateTable();
             };
+            this.MainCanvas.OnModify += delegate(object sender, EventArgs e)
+            {
+                UpdateTable();
+            };
+        }
+
+        private void UpdateTable()
+        {
+            NodesTable.Rows.Clear();
+            foreach (Node node in this.MainCanvas.Nodes)
+            {
+                DataGridViewRow row = new DataGridViewRow();
+
+                DataGridViewTextBoxCell act = new DataGridViewTextBoxCell();
+                act.Value = node.ActivityName;
+
+                DataGridViewTextBoxCell dur = new DataGridViewTextBoxCell();
+                dur.Value = node.ActivityTime;
+
+                DataGridViewTextBoxCell dep = new DataGridViewTextBoxCell();
+                dep.Value = node.DependsOnString;
+
+                row.Cells.Add(act);
+                row.Cells.Add(dur);
+                row.Cells.Add(dep);
+
+                this.NodesTable.Rows.Add(row);
+            }
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -61,12 +70,16 @@ namespace Proyectos
             node.Origin = new Point(100, 100);
             this.MainCanvas.Nodes.Add(node);
             this.MainCanvas.Invalidate();
+
+            this.UpdateTable();
         }
 
         private void CalculateButton_Click(object sender, EventArgs e)
         {
             this.Status("");
             this.MainCanvas.CalculateGraph();
+            
+            this.UpdateTable();
         }
 
         private void ExportButton_Click(object sender, EventArgs e)
@@ -179,6 +192,63 @@ namespace Proyectos
         private void MenuExit_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void NodesTable_UserAddedRow(object sender, DataGridViewRowEventArgs e)
+        {
+            Node node = new Node();
+            node.Origin = new Point(100, 100);
+            this.MainCanvas.Nodes.Add(node);
+        }
+
+        private void NodesTable_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
+        {
+            this.MainCanvas.Nodes.RemoveAt(this.NodesTable.Rows.IndexOf(e.Row));
+        }
+
+        private void NodesTable_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0)
+                return;
+
+            Node node = this.MainCanvas.Nodes[e.RowIndex];
+
+            DataGridViewRow row = this.NodesTable.Rows[e.RowIndex];
+
+            decimal time = 0;
+            string dependsOnString = "";
+
+            if (row.Cells[0].Value != null)
+                node.ActivityName = (string)row.Cells[0].Value.ToString().ToUpper();
+            if (row.Cells[1].Value != null)
+            {
+                if (row.Cells[1].Value.GetType() == typeof(string))
+                {
+                    decimal.TryParse(row.Cells[1].Value.ToString(), out time);
+                }
+                else if (row.Cells[1].Value.GetType() == typeof(decimal))
+                {
+                    node.ActivityTime = (decimal)row.Cells[1].Value;
+                }
+            }
+            if (row.Cells[2].Value != null)
+                dependsOnString = (string)row.Cells[2].Value.ToString().ToUpper();
+
+            node.ActivityTime = time;
+
+            IEnumerable<Node> nodes_search;
+            node.DependsOn.Clear();
+            List<string> depstrs = new List<string>(dependsOnString.Split(new char[] { ',' }));
+            foreach (string str in depstrs)
+            {
+                if (str == "")
+                    continue;
+                nodes_search = from n in this.MainCanvas.Nodes
+                               where n.ActivityName == str.Trim()
+                               select n;
+
+                node.DependsOn.AddRange(nodes_search);
+            }
         }
 
     }

@@ -39,6 +39,9 @@
             this.GraficaTab = new System.Windows.Forms.TabPage();
             this.TablaTab = new System.Windows.Forms.TabPage();
             this.NodesTable = new System.Windows.Forms.DataGridView();
+            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.RecursosTab = new System.Windows.Forms.TabPage();
             this.MainMenu = new System.Windows.Forms.MenuStrip();
             this.archivoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -49,9 +52,6 @@
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.MenuExit = new System.Windows.Forms.ToolStripMenuItem();
             this.MainCanvas = new Proyectos.NodeCanvas();
-            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.MainToolbar.SuspendLayout();
             this.MainStatus.SuspendLayout();
             this.Tabs.SuspendLayout();
@@ -166,6 +166,24 @@
             this.NodesTable.Name = "NodesTable";
             this.NodesTable.Size = new System.Drawing.Size(697, 402);
             this.NodesTable.TabIndex = 0;
+            this.NodesTable.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.NodesTable_CellValueChanged);
+            this.NodesTable.UserAddedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.NodesTable_UserAddedRow);
+            this.NodesTable.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.NodesTable_UserDeletingRow);
+            // 
+            // Column1
+            // 
+            this.Column1.HeaderText = "Actividad";
+            this.Column1.Name = "Column1";
+            // 
+            // Column2
+            // 
+            this.Column2.HeaderText = "Duración";
+            this.Column2.Name = "Column2";
+            // 
+            // Column3
+            // 
+            this.Column3.HeaderText = "Dependencia";
+            this.Column3.Name = "Column3";
             // 
             // RecursosTab
             // 
@@ -246,21 +264,6 @@
             this.MainCanvas.Size = new System.Drawing.Size(697, 377);
             this.MainCanvas.TabIndex = 1;
             this.MainCanvas.Text = "nodeCanvas1";
-            // 
-            // Column1
-            // 
-            this.Column1.HeaderText = "Actividad";
-            this.Column1.Name = "Column1";
-            // 
-            // Column2
-            // 
-            this.Column2.HeaderText = "Duración";
-            this.Column2.Name = "Column2";
-            // 
-            // Column3
-            // 
-            this.Column3.HeaderText = "Dependencia";
-            this.Column3.Name = "Column3";
             // 
             // MainForm
             // 
