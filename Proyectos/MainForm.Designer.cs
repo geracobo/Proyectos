@@ -37,12 +37,8 @@
             this.StatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.Tabs = new System.Windows.Forms.TabControl();
             this.GraficaTab = new System.Windows.Forms.TabPage();
-            this.MainCanvas = new Proyectos.NodeCanvas();
             this.TablaTab = new System.Windows.Forms.TabPage();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.NodesTable = new System.Windows.Forms.DataGridView();
             this.RecursosTab = new System.Windows.Forms.TabPage();
             this.MainMenu = new System.Windows.Forms.MenuStrip();
             this.archivoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -52,12 +48,16 @@
             this.MenuSave = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.MenuExit = new System.Windows.Forms.ToolStripMenuItem();
+            this.MainCanvas = new Proyectos.NodeCanvas();
+            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.MainToolbar.SuspendLayout();
             this.MainStatus.SuspendLayout();
             this.Tabs.SuspendLayout();
             this.GraficaTab.SuspendLayout();
             this.TablaTab.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NodesTable)).BeginInit();
             this.MainMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -143,60 +143,36 @@
             this.GraficaTab.Text = "Gráfica";
             this.GraficaTab.UseVisualStyleBackColor = true;
             // 
-            // MainCanvas
-            // 
-            this.MainCanvas.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.MainCanvas.Location = new System.Drawing.Point(3, 28);
-            this.MainCanvas.Name = "MainCanvas";
-            this.MainCanvas.Size = new System.Drawing.Size(697, 377);
-            this.MainCanvas.TabIndex = 1;
-            this.MainCanvas.Text = "nodeCanvas1";
-            // 
             // TablaTab
             // 
-            this.TablaTab.Controls.Add(this.dataGridView1);
+            this.TablaTab.Controls.Add(this.NodesTable);
             this.TablaTab.Location = new System.Drawing.Point(4, 22);
             this.TablaTab.Name = "TablaTab";
             this.TablaTab.Padding = new System.Windows.Forms.Padding(3);
-            this.TablaTab.Size = new System.Drawing.Size(703, 383);
+            this.TablaTab.Size = new System.Drawing.Size(703, 408);
             this.TablaTab.TabIndex = 1;
             this.TablaTab.Text = "Tabla";
             this.TablaTab.UseVisualStyleBackColor = true;
             // 
-            // dataGridView1
+            // NodesTable
             // 
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.NodesTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.NodesTable.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Column1,
             this.Column2,
             this.Column3});
-            this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView1.Location = new System.Drawing.Point(3, 3);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(697, 377);
-            this.dataGridView1.TabIndex = 0;
-            // 
-            // Column1
-            // 
-            this.Column1.HeaderText = "Actividad";
-            this.Column1.Name = "Column1";
-            // 
-            // Column2
-            // 
-            this.Column2.HeaderText = "Duración";
-            this.Column2.Name = "Column2";
-            // 
-            // Column3
-            // 
-            this.Column3.HeaderText = "Precedencia";
-            this.Column3.Name = "Column3";
+            this.NodesTable.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.NodesTable.Location = new System.Drawing.Point(3, 3);
+            this.NodesTable.Name = "NodesTable";
+            this.NodesTable.Size = new System.Drawing.Size(697, 402);
+            this.NodesTable.TabIndex = 0;
             // 
             // RecursosTab
             // 
             this.RecursosTab.Location = new System.Drawing.Point(4, 22);
             this.RecursosTab.Name = "RecursosTab";
             this.RecursosTab.Padding = new System.Windows.Forms.Padding(3);
-            this.RecursosTab.Size = new System.Drawing.Size(703, 383);
+            this.RecursosTab.Size = new System.Drawing.Size(703, 408);
             this.RecursosTab.TabIndex = 2;
             this.RecursosTab.Text = "Recursos";
             this.RecursosTab.UseVisualStyleBackColor = true;
@@ -262,6 +238,30 @@
             this.MenuExit.Text = "Salir";
             this.MenuExit.Click += new System.EventHandler(this.MenuExit_Click);
             // 
+            // MainCanvas
+            // 
+            this.MainCanvas.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.MainCanvas.Location = new System.Drawing.Point(3, 28);
+            this.MainCanvas.Name = "MainCanvas";
+            this.MainCanvas.Size = new System.Drawing.Size(697, 377);
+            this.MainCanvas.TabIndex = 1;
+            this.MainCanvas.Text = "nodeCanvas1";
+            // 
+            // Column1
+            // 
+            this.Column1.HeaderText = "Actividad";
+            this.Column1.Name = "Column1";
+            // 
+            // Column2
+            // 
+            this.Column2.HeaderText = "Duración";
+            this.Column2.Name = "Column2";
+            // 
+            // Column3
+            // 
+            this.Column3.HeaderText = "Dependencia";
+            this.Column3.Name = "Column3";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -283,7 +283,7 @@
             this.GraficaTab.ResumeLayout(false);
             this.GraficaTab.PerformLayout();
             this.TablaTab.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NodesTable)).EndInit();
             this.MainMenu.ResumeLayout(false);
             this.MainMenu.PerformLayout();
             this.ResumeLayout(false);
@@ -303,11 +303,8 @@
         private System.Windows.Forms.TabControl Tabs;
         private System.Windows.Forms.TabPage GraficaTab;
         private System.Windows.Forms.TabPage TablaTab;
-        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridView NodesTable;
         private System.Windows.Forms.TabPage RecursosTab;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
         private System.Windows.Forms.MenuStrip MainMenu;
         private System.Windows.Forms.ToolStripMenuItem archivoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem MenuNew;
@@ -316,6 +313,9 @@
         private System.Windows.Forms.ToolStripMenuItem MenuSave;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem MenuExit;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
 
 
 

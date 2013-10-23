@@ -24,6 +24,30 @@ namespace Proyectos
             {
                 this.Status(status);
             };
+
+            this.MainCanvas.NodesChanged += delegate(object sender, EventArgs e)
+            {
+                NodesTable.Rows.Clear();
+                foreach (Node node in this.MainCanvas.Nodes)
+                {
+                    DataGridViewRow row = new DataGridViewRow();
+
+                    DataGridViewTextBoxCell act = new DataGridViewTextBoxCell();
+                    act.Value = node.ActivityName;
+
+                    DataGridViewTextBoxCell dur = new DataGridViewTextBoxCell();
+                    dur.Value = node.ActivityTime;
+
+                    DataGridViewTextBoxCell dep = new DataGridViewTextBoxCell();
+                    dep.Value = node.DependsOnString;
+
+                    row.Cells.Add(act);
+                    row.Cells.Add(dur);
+                    row.Cells.Add(dep);
+
+                    this.NodesTable.Rows.Add(row);
+                }
+            };
         }
 
         private void MainForm_Load(object sender, EventArgs e)

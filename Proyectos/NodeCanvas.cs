@@ -12,21 +12,62 @@ namespace Proyectos
 {
     public partial class NodeCanvas : Control
     {
-        private List<Node> _nodes;
+        private NodeCollection _nodes;
 
         private int analizeDepth;
 
         private const int MaxDepth = 100;
 
+        private Node _selectedNode;
+
 
         public event StatusEventHandler Status;
+        public event EventHandler NodesChanged;
 
         public NodeCanvas()
         {
             InitializeComponent();
 
 
-            this._nodes = new List<Node>();
+            this._nodes = new NodeCollection();
+            this._nodes.OnInsert += delegate(object sender, EventArgs e)
+            {
+                this.Status("Actividad Agregada.");
+                this.NodesChanged(this, new EventArgs());
+            };
+            this._nodes.OnRemove += delegate(object sender, EventArgs e)
+            {
+                this.Status("Actividad Eliminada.");
+                this.NodesChanged(this, new EventArgs());
+            };
+            this._nodes.OnSet += delegate(object sender, EventArgs e)
+            {
+                this.Status("Actividad Modificada.");
+                this.NodesChanged(this, new EventArgs());
+            };
+            this._nodes.OnClear += delegate(object sender, EventArgs e)
+            {
+                this.Status("Actividades Eliminadas.");
+                this.NodesChanged(this, new EventArgs());
+            };
+
+
+            this.ModificarButton.Click += delegate(object sender, EventArgs e)
+            {
+                if (_selectedNode == null)
+                    return;
+
+                this._selectedNode.OnDoubleClick(this.Nodes);
+                this.NodesChanged(this, new EventArgs());
+            };
+            this.EliminarButton.Click += delegate(object sender, EventArgs e)
+            {
+                if (_selectedNode == null)
+                    return;
+
+                this.Nodes.Remove(this._selectedNode);
+            };
+
 
             this.BackColor = Color.White;
 
@@ -36,6 +77,8 @@ namespace Proyectos
             this.SetStyle(ControlStyles.ResizeRedraw, true);
             this.SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
         }
+
+
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public override Color BackColor
@@ -51,7 +94,7 @@ namespace Proyectos
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public List<Node> Nodes
+        public NodeCollection Nodes
         {
             get
             {
@@ -163,11 +206,11 @@ namespace Proyectos
 
             // Backwards
             this.analizeDepth = 0;
-            this.Nodes.ForEach(delegate(Node node)
+            foreach(Node node in this.Nodes)
             {
                 node.ActivityLastTimeEnd = fin.ActivityFirstTimeEnd;
                 node.ActivityLastTimeStart = fin.ActivityFirstTimeStart;
-            });
+            }
             AnalizeBackward(fin);
 
             // Slacks
@@ -178,7 +221,7 @@ namespace Proyectos
 
         private void AnalizeSlacks()
         {
-            this.Nodes.ForEach(delegate(Node node)
+            foreach(Node node in this.Nodes)
             {
                 IEnumerable<Node> node_search;
 
@@ -197,7 +240,7 @@ namespace Proyectos
                         min = n.ActivityFirstTimeStart;
                 }
                 node.ActivityFreeSlack = min - node.ActivityFirstTimeEnd;
-            });
+            }
         }
 
         private void AnalizeForward(Node node)
@@ -280,7 +323,15 @@ namespace Proyectos
             {
                 if (node.HitTest(e.Location))
                 {
-                    node.OnMouseDown(e.Location);
+                    this._selectedNode = node;
+                    if (e.Button == System.Windows.Forms.MouseButtons.Left)
+                    {
+                        node.OnMouseDown(e.Location);
+                    }
+                    else if (e.Button == System.Windows.Forms.MouseButtons.Right)
+                    {
+                        NodeMenu.Show(this, e.Location);
+                    }
                     return;
                 }
             }
@@ -331,6 +382,7 @@ namespace Proyectos
                 if (node.HitTest(e.Location))
                 {
                     node.OnDoubleClick(this.Nodes);
+                    this.NodesChanged(this, new EventArgs());
                 }
             }
             this.Invalidate();

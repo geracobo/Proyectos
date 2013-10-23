@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
+
 
 namespace Proyectos
 {
@@ -300,7 +302,7 @@ namespace Proyectos
                 this._mouseClicked = location;
             }
         }
-        public void OnDoubleClick(List<Node> nodes)
+        public void OnDoubleClick(NodeCollection nodes)
         {
             IEnumerable<Node> nodes_search;
             ConfigNode config = new ConfigNode(this);
@@ -329,12 +331,52 @@ namespace Proyectos
             List<string> depstrs = new List<string>(config.DependsOnString.Split(new char[] {','}));
             foreach (string str in depstrs)
             {
+                if (str == "")
+                    continue;
                 nodes_search = from n in nodes
                                                  where n.ActivityName == str.Trim()
                                                  select n;
 
                 this.DependsOn.AddRange(nodes_search);
             }
+        }
+    }
+
+
+    public class NodeCollection : Collection<Node>
+    {
+        public event EventHandler OnInsert;
+        public event EventHandler OnRemove;
+        public event EventHandler OnSet;
+        public event EventHandler OnClear;
+
+        public NodeCollection()
+        {
+        }
+
+        protected override void InsertItem(int index, Node item)
+        {
+            if (OnInsert != null)
+                OnInsert(this, new EventArgs());
+            base.InsertItem(index, item);
+        }
+        protected override void RemoveItem(int index)
+        {
+            if (OnRemove != null)
+                OnRemove(this, new EventArgs());
+            base.RemoveItem(index);
+        }
+        protected override void SetItem(int index, Node item)
+        {
+            if (OnSet != null)
+                OnSet(this, new EventArgs());
+            base.SetItem(index, item);
+        }
+        protected override void ClearItems()
+        {
+            if (OnClear != null)
+                OnClear(this, new EventArgs());
+            base.ClearItems();
         }
     }
 
