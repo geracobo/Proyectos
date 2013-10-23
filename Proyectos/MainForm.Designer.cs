@@ -52,13 +52,18 @@
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.MenuExit = new System.Windows.Forms.ToolStripMenuItem();
             this.MainCanvas = new Proyectos.NodeCanvas();
+            this.ReduccionesTab = new System.Windows.Forms.TabPage();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             this.MainToolbar.SuspendLayout();
             this.MainStatus.SuspendLayout();
             this.Tabs.SuspendLayout();
             this.GraficaTab.SuspendLayout();
             this.TablaTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.NodesTable)).BeginInit();
+            this.RecursosTab.SuspendLayout();
             this.MainMenu.SuspendLayout();
+            this.ReduccionesTab.SuspendLayout();
             this.SuspendLayout();
             // 
             // MainToolbar
@@ -123,6 +128,7 @@
             // 
             this.Tabs.Controls.Add(this.GraficaTab);
             this.Tabs.Controls.Add(this.TablaTab);
+            this.Tabs.Controls.Add(this.ReduccionesTab);
             this.Tabs.Controls.Add(this.RecursosTab);
             this.Tabs.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Tabs.Location = new System.Drawing.Point(0, 24);
@@ -187,6 +193,7 @@
             // 
             // RecursosTab
             // 
+            this.RecursosTab.Controls.Add(this.label2);
             this.RecursosTab.Location = new System.Drawing.Point(4, 22);
             this.RecursosTab.Name = "RecursosTab";
             this.RecursosTab.Padding = new System.Windows.Forms.Padding(3);
@@ -265,6 +272,37 @@
             this.MainCanvas.TabIndex = 1;
             this.MainCanvas.Text = "nodeCanvas1";
             // 
+            // ReduccionesTab
+            // 
+            this.ReduccionesTab.Controls.Add(this.label1);
+            this.ReduccionesTab.Location = new System.Drawing.Point(4, 22);
+            this.ReduccionesTab.Name = "ReduccionesTab";
+            this.ReduccionesTab.Padding = new System.Windows.Forms.Padding(3);
+            this.ReduccionesTab.Size = new System.Drawing.Size(703, 408);
+            this.ReduccionesTab.TabIndex = 3;
+            this.ReduccionesTab.Text = "Reducciones";
+            this.ReduccionesTab.UseVisualStyleBackColor = true;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 27.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(206, 158);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(291, 42);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "YA QUISIERAS";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 27.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(206, 183);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(291, 42);
+            this.label2.TabIndex = 1;
+            this.label2.Text = "YA QUISIERAS";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -287,8 +325,12 @@
             this.GraficaTab.PerformLayout();
             this.TablaTab.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.NodesTable)).EndInit();
+            this.RecursosTab.ResumeLayout(false);
+            this.RecursosTab.PerformLayout();
             this.MainMenu.ResumeLayout(false);
             this.MainMenu.PerformLayout();
+            this.ReduccionesTab.ResumeLayout(false);
+            this.ReduccionesTab.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -319,6 +361,9 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
+        private System.Windows.Forms.TabPage ReduccionesTab;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
 
 
 
