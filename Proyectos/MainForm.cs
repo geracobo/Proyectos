@@ -251,5 +251,10 @@ namespace Proyectos
             }
         }
 
+        private void MainCanvas_Click(object sender, EventArgs e)
+        {
+
+        }
+
     }
 }

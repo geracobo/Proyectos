@@ -149,6 +149,7 @@
             this.MainCanvas.Size = new System.Drawing.Size(697, 377);
             this.MainCanvas.TabIndex = 1;
             this.MainCanvas.Text = "nodeCanvas1";
+            this.MainCanvas.Click += new System.EventHandler(this.MainCanvas_Click);
             // 
             // TablaTab
             // 
